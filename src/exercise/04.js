@@ -4,7 +4,13 @@
 import * as React from 'react'
 
 function Board() {
-  const [squares, setSquares] = React.useState(Array(9).fill(null))
+  const [squares, setSquares] = React.useState(
+    () => JSON.parse(localStorage.getItem('squares')) || Array(9).fill(null),
+  )
+
+  React.useEffect(() => {
+    localStorage.setItem('squares', JSON.stringify(squares))
+  }, [squares])
 
   const nextValue = calculateNextValue(squares)
   const winner = calculateWinner(squares)
@@ -23,7 +29,9 @@ function Board() {
   }
 
   function restart() {
-    setSquares(Array(9).fill(null))
+    const emptyBoard = Array(9).fill(null)
+    localStorage.setItem('squares', JSON.stringify(emptyBoard))
+    setSquares(emptyBoard)
   }
 
   function renderSquare(i) {
