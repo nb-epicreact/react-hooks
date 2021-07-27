@@ -15,25 +15,27 @@ const RESOLVED = 'resolved'
 const REJECTED = 'rejected'
 
 function PokemonInfo({pokemonName}) {
-  const [pokemon, setPokemon] = React.useState(null)
-  const [error, setError] = React.useState(null)
-  const [status, setStatus] = React.useState(IDLE)
+  const [state, setState] = React.useState({
+    status: IDLE,
+    pokemon: null,
+    error: null,
+  })
+
+  const {status, error, pokemon} = state
 
   React.useEffect(() => {
     if (!pokemonName) {
       return
     }
 
-    setStatus(PENDING)
+    setState({status: PENDING})
 
     fetchPokemon(pokemonName)
       .then(pokemonData => {
-        setPokemon(pokemonData)
-        setStatus(RESOLVED)
+        setState({status: RESOLVED, pokemon: pokemonData})
       })
       .catch(error => {
-        setError(error)
-        setStatus(REJECTED)
+        setState({status: REJECTED, error})
       })
   }, [pokemonName])
 
